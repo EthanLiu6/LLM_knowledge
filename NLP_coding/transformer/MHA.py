@@ -27,7 +27,7 @@ class MHA(nn.Module):
 
         # q @ k.T / sqrt(k_dim)
         atten_score = query_head @ key_head.transpose(-1, -2) / (self.k_dim ** 2)
-        atten_weights = torch.softmax(atten_score, dim=-1) @ value_head
+        atten = torch.softmax(atten_score, dim=-1) @ value_head
         res = atten.transpose(1, 2).contiguous().view(in_x.shape)
 
         return res, atten_score, short_cut
@@ -78,8 +78,8 @@ if __name__ == '__main__':
     print(short_cut.shape)
 
     mqa = MQA(1024, 8)
-    score, atten, res, short_cut = mqa(x)
+    score, atten_res, res, short_cut = mqa(x)
     print(score.shape)
-    print(atten.shape)
+    print(atten_res.shape)
     print(res.shape)
     print(short_cut.shape)
